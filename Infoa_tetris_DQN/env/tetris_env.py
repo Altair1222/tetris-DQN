@@ -344,13 +344,25 @@ class TetrisEnv(gym.Env):
                 self._fig.set_size_inches(self.fig_width, self.fig_height, forward=True)
                 self._im = self._ax.imshow(obs, cmap=cmap, norm=norm, interpolation="nearest")
                 self._ax.set_title(f"Score: {self.score}")
-                self._ax.axis("off")
+                # 軸ラベルと目盛りの文字を非表示にする
+                self._ax.set_xticklabels([])
+                self._ax.set_yticklabels([])
+                # 軸の目盛り線は表示するが、スパイン（境界線）は非表示にする
+                for spine in self._ax.spines.values():
+                    spine.set_visible(False)
                 # 枠線を描画
                 rect = Rectangle(
                     (-0.5, -0.5), self.width, self.height,
                     fill=False, edgecolor="black", linewidth=2
                 )
                 self._ax.add_patch(rect)
+                # セルの境界線を描画 (グリッド)
+                self._ax.set_xticks(np.arange(-0.5, self.width, 1.0))
+                self._ax.set_yticks(np.arange(-0.5, self.height, 1.0))
+                self._ax.grid(color="black", linewidth=0.5)
+                # 軸の範囲を調整して、グリッド線がセルの縁に沿って表示されるようにする
+                self._ax.set_xlim(-0.5, self.width - 0.5)
+                self._ax.set_ylim(self.height - 0.5, -0.5)
                 plt.show(block=False)
             else:
                 # 図のサイズを現時点のプロパティに合わせる
