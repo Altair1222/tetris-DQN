@@ -257,19 +257,22 @@ class TetrisEnv(gym.Env):
             # ソフトドロップ (1 マス下に移動)
             if self._valid_position(self.piece_x, self.piece_y + 1, self.current_rotation):
                 self.piece_y += 1
+                reward -= 0.05
             else:
                 # これ以上下に行けない → 固定処理
+                reward+= self.piece_y/20
                 self._lock_piece()
                 lines = self._clear_lines()
-                reward += lines * 200.0
+                reward += lines * 5.0
                 self.lines_cleared_total += lines
-                self.score += lines * 200.0
+                self.score += lines * 1.0
                 self._spawn_new_piece()
                 # 新ピースが置けない場合はゲームオーバー
                 if not self._valid_position(self.piece_x, self.piece_y, self.current_rotation):
                     self.game_over = True
-                else:
-                    reward+=1
+                    reward -= 10.0
+                
+                    
                 
 
         elif action == 5:
@@ -277,16 +280,17 @@ class TetrisEnv(gym.Env):
             while self._valid_position(self.piece_x, self.piece_y + 1, self.current_rotation):
                 self.piece_y += 1
             # 落ち切ったところで固定
+            reward+= self.piece_y/20
             self._lock_piece()
             lines = self._clear_lines()
-            reward += lines * 200.0
+            reward += lines * 5.0
             self.lines_cleared_total += lines
-            self.score += lines * 200.0
+            self.score += lines * 1.0
             self._spawn_new_piece()
             if not self._valid_position(self.piece_x, self.piece_y, self.current_rotation):
                 self.game_over = True
-            else:
-                reward+=1
+                reward -= 10.0
+          
 
         # action == 0 の場合は「何もしない」
         # ただし、通常 gravity （重力落下）を適用する
@@ -298,16 +302,17 @@ class TetrisEnv(gym.Env):
                 self.piece_y += 1
             else:
                 # これ以上下に行けない → 固定処理
+                reward+= self.piece_y/20
                 self._lock_piece()
                 lines = self._clear_lines()
-                reward += lines * 200.0
+                reward += lines * 5.0
                 self.lines_cleared_total += lines
-                self.score += lines * 200.0
+                self.score += lines * 1.0
                 self._spawn_new_piece()
                 if not self._valid_position(self.piece_x, self.piece_y, self.current_rotation):
                     self.game_over = True
-                else:
-                    reward+=1
+                    reward -= 10.0
+  
 
         # --- 3) 終了判定 ---
         terminated = self.game_over

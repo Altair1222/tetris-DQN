@@ -93,7 +93,7 @@ def main():
 
             # 4-6) 次状態を現在状態にする
             state = next_state
-
+            
      
             # 4-7) エピソード終了判定
             if terminated or truncated:
@@ -119,7 +119,6 @@ def main():
     # -------------------------
     # 最終モデルを保存
     save_model_checkpoint(agent, config.CHECKPOINT_DIR, "final")
-        # 50 エピソードに 1 回だけ可視化
 
 
 
